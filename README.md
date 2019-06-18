@@ -35,51 +35,60 @@ Dans cette première partie, vous allez capturer une connexion WPA Entreprise au
 - Lancer une capture avec Wireshark
 - Etablir une connexion depuis un poste de travail (PC), un smartphone ou une tablette. Attention, il est important que la connexion se fasse à 2.4 GHz pour pouvoir sniffer avec les interfaces Alfa.
 - Comparer votre capture au processus d’authentification expliqué en classe (n’oubliez pas les captures !). En particulier, identifier les étapes suivantes :
+![Connection steps](StepsConnection.png)
 	- Requête et réponse d’authentification système ouvert
+	![identity request](identity_request.png)
+	![identity_response](responseIdentity.png)
  	- Requête et réponse d’association
 	- Sélection de la méthode d’authentification
+	![choice](ProtectedEAPChoice.png)
 	- Phase d’initiation. Arrivez-vous à voir l’identité du client ?
 	- Phase hello :
 		- Version TLS
 		- Suites cryptographiques et méthodes de compression proposées par le client et acceptées par l’AP
 		- Nonces
+		![tls_suites_nonces](clientHello_cryptoSuites.png)
 		- Session ID
+		![sessionID](sessionID_phasesHello.png)
 	- Phase de transmission de certificats
 	 	- Certificat serveur
+		![certifs](certificatServeurs.png)
 		- Change cipher spec
+		![cipherSpec](chanceCipherspec.png)
 	- Authentification interne et transmission de la clé WPA (échange chiffré, vu comme « Application data »)
-	- 4-way hadshake
-
+	![](applicationData.png)
+	- 4-way handshake
+		![4way](4-way_handshake.png)
 ### Répondez aux questions suivantes :
- 
+
 > **_Question :_** Quelle ou quelles méthode(s) d’authentification est/sont proposé(s) au client ?
-> 
-> **_Réponse :_** 
+>
+> **_Réponse :_** ![auth_method](auth_method.png)
 
 ---
 
 > **_Question:_** Quelle méthode d’authentification est utilisée ?
-> 
-> **_Réponse:_** 
+>
+> **_Réponse:_** PEAP est utilisöe
 
 ---
 
 > **_Question:_** Lors de l’échange de certificats entre le serveur d’authentification et le client :
-> 
+>
 > - Le serveur envoie-t-il un certificat au client ? Pourquoi oui ou non ?
-> 
-> **_Réponse:_**
-> 
+>
+> **_Réponse:_** Oui le serveur envoie un certificat au client, pour eviter des attaques comme Evil Twin.
+>
 > - b.	Le client envoie-t-il un certificat au serveur ? Pourquoi oui ou non ?
-> 
-> **_Réponse:_**
-> 
+>
+> **_Réponse:_** Non avec PEAP le client n'envoie pas de certificat.
+>
 
 ---
 
 ### 2. Attaque WPA Entreprise
 
-Les réseaux utilisant une authentification WPA Entreprise sont considérés aujourd’hui comme étant très surs. En effet, puisque la Master Key utilisée pour la dérivation des clés WPA est générée de manière aléatoire dans le processus d’authentification, les attaques par dictionnaire ou brute-force utilisés sur WPA Personnel ne sont plus applicables. 
+Les réseaux utilisant une authentification WPA Entreprise sont considérés aujourd’hui comme étant très surs. En effet, puisque la Master Key utilisée pour la dérivation des clés WPA est générée de manière aléatoire dans le processus d’authentification, les attaques par dictionnaire ou brute-force utilisés sur WPA Personnel ne sont plus applicables.
 
 Il existe pourtant d’autres moyens pour attaquer les réseaux Entreprise, se basant sur une mauvaise configuration d’un client WiFi. En effet, on peut proposer un « evil twin » à la victime pour l’attirer à se connecter à un faux réseau qui nous permette de capturer le processus d’authentification interne. Une attaque par brute-force peut être faite sur cette capture, beaucoup plus vulnérable d’être craquée qu’une clé WPA à 256 bits, car elle est effectuée sur le compte d’un utilisateur.
 
@@ -88,7 +97,7 @@ Pour faire fonctionner cette attaque, il est impératif que la victime soit conf
 Pour implémenter l’attaque :
 
 - Installer ```hostapd-wpe``` (il existe des versions modifiées qui peuvent peut-être faciliter la tâche... je ne les connais pas. Dans le doute, utiliser la version originale). Lire la documentation du site de l’outil ou d’autres ressource sur Internet pour comprendre son utilisation
-- Modifier la configuration de ```hostapd-wpe``` pour proposer un réseau semblable au réseau de l’école. Ça ne sera pas evident de vous connecter si vous utilisez le même nom HEIG-VD. L'option la plus sure c'est de proposer votre propre réseau avec un SSID comme par exemple, HEIG-VD-Faux (sachant que dans le cas d'une attaque réelle, il faudrait utiliser le vrai SSI) 
+- Modifier la configuration de ```hostapd-wpe``` pour proposer un réseau semblable au réseau de l’école. Ça ne sera pas evident de vous connecter si vous utilisez le même nom HEIG-VD. L'option la plus sure c'est de proposer votre propre réseau avec un SSID comme par exemple, HEIG-VD-Faux (sachant que dans le cas d'une attaque réelle, il faudrait utiliser le vrai SSI)
 - Lancer une capture Wireshark
 - Tenter une connexion au réseau (ne pas utiliser vos identifiants réels)
 - Utiliser un outil de brute-force (```john```, par exemple) pour attaquer le hash capturé (utiliser un mot de passe assez petit pour minimiser le temps)
@@ -96,19 +105,19 @@ Pour implémenter l’attaque :
 ### Répondez aux questions suivantes :
 
 > **_Question :_** Quelles modifications sont nécessaires dans la configuration de hostapd-wpe pour cette attaque ?
-> 
-> **_Réponse :_** 
+>
+> **_Réponse :_**
 
 ---
 
 > **_Question:_** Quel type de hash doit-on indiquer à john pour craquer le handshake ?
-> 
-> **_Réponse:_** 
+>
+> **_Réponse:_**
 
 ---
 
 > **_Question:_** 6.	Quelles méthodes d’authentification sont supportées par hostapd-wpe ?
-> 
+>
 > **_Réponse:_**
 
 
@@ -120,7 +129,7 @@ Pour implémenter l’attaque :
 nmcli radio wifi off
 rfkill unblock wlan
 ```
--	Pour pouvoir capturer une authentification complète, il faut se déconnecter d’un réseau et attendre 1 minute (timeout pour que l’AP « oublie » le client) 
+-	Pour pouvoir capturer une authentification complète, il faut se déconnecter d’un réseau et attendre 1 minute (timeout pour que l’AP « oublie » le client)
 -	Les échanges d’authentification entreprise peuvent être trouvés facilement utilisant le filtre d’affichage « ```eap``` » dans Wireshark
 
 
