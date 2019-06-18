@@ -106,19 +106,25 @@ Pour implémenter l’attaque :
 
 > **_Question :_** Quelles modifications sont nécessaires dans la configuration de hostapd-wpe pour cette attaque ?
 >
-> **_Réponse :_**
+> **_Réponse :_** Modifier le SSID et l'interface  
+![fichier conf](hostapd_wpe_conf.png)
 
 ---
 
 > **_Question:_** Quel type de hash doit-on indiquer à john pour craquer le handshake ?
 >
-> **_Réponse:_**
-
+> **_Réponse:_** D'après la documentation, nous n'avons pas eu à utiliser John mais la commande asleap pour trouver le mot de passe
+![pwd_recover](asleap_password_recover.png)
 ---
 
 > **_Question:_** 6.	Quelles méthodes d’authentification sont supportées par hostapd-wpe ?
 >
-> **_Réponse:_**
+> **_Réponse:_** 1) EAP-FAST/MSCHAPv2  
+ 								 2) PEAP/MSCHAPv2
+								 3) EAP-TTLS/MSCHAPv2
+								 4) EAP-TTLS/MSCHAP
+								 5) EAP-TTLS/CHAP
+								 6) EAP-TTLS/PAP
 
 
 ## Quelques éléments à considérer :
