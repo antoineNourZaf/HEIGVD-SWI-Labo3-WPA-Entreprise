@@ -63,13 +63,13 @@ Dans cette première partie, vous allez capturer une connexion WPA Entreprise au
 
 > **_Question :_** Quelle ou quelles méthode(s) d’authentification est/sont proposé(s) au client ?
 >
-> **_Réponse :_** ![auth_method](auth_method.png)
+> **_Réponse :_** ![auth_method](auth_method.JPG)
 
 ---
 
 > **_Question:_** Quelle méthode d’authentification est utilisée ?
 >
-> **_Réponse:_** PEAP est utilisöe
+> **_Réponse:_** PEAP est utilise
 
 ---
 
